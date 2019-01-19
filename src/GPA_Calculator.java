@@ -1,10 +1,5 @@
-import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -33,15 +28,76 @@ public class GPA_Calculator extends JPanel{
     private static final int FRAME_WIDTH = 900;
     private static final int FRAME_HEIGHT = 600;
     private static final int FIELD_WIDTH = 11; 
-    private static final int TABLE_ROWS = 15;
-    private static final int TABLE_COLUMNS = 40;
+    private static final int TABLE_ROWS = 10; // lines of text
+    private static final int TABLE_COLUMNS = 40; // characters per row
     JTextArea textArea;
     JScrollPane scrollPane;
-
-
+    
 
 
     public GPA_Calculator() {
+        createWindow();
+
+        // Text Input Fields
+
+        // course input field
+        createCourseInput();
+
+        // GPA input field
+        createGPAInput();
+
+        // Credit input field
+        createCreditInput();
+
+        // File Name input field
+        createFileInput();
+
+
+        // Save Button
+        // Save a course list
+        createSave();
+
+
+        // Load Button
+        // Load in a course list
+        createLoad();
+
+
+        // Clear Button
+        // Clear all classes from the list
+        createClear();
+
+
+        // Calculate Button
+        // Calculate in a course list
+        createCalculate();
+
+        // Add Button
+        // Add course to course list
+        createAdd();
+
+
+
+        // GPA Calculation Display
+        createCalculationDisplay();
+
+
+        // TODO fix course list table
+        // Add Course Table
+        textArea = new JTextArea("Course List", TABLE_ROWS, TABLE_COLUMNS);
+        textArea.setEditable(false);
+        window.add(textArea);
+        textArea.setBounds(370, 50, 500, 400);
+        scrollPane = new JScrollPane(textArea);
+        
+       
+
+
+
+    } // end GPA_Calculator Method
+
+
+    public void createWindow() {
         window.setBounds(100, 100, 1, 1);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.getContentPane().add(this);
@@ -50,11 +106,10 @@ public class GPA_Calculator extends JPanel{
 
         window.setLayout(null); // unlock the screen stretching
         window.setSize(FRAME_WIDTH, FRAME_HEIGHT);
-
-
-        // Text Input Fields
-
-        // course input field
+    } // end createWinow method
+    
+    
+    public void createCourseInput() {
         courseLabel = new JLabel("Enter the course name: ");
         courseField = new JTextField(FIELD_WIDTH);
         courseField.setText("" + className);
@@ -69,10 +124,11 @@ public class GPA_Calculator extends JPanel{
                 className = courseField.getText();
 
             }
-        }); // end courseField
-
-
-        // GPA input field
+        }); 
+    } // end createCourseInput method
+    
+    
+    public void createGPAInput() {
         gpaLabel = new JLabel("Enter the course GPA: ");
         gpaField = new JTextField(FIELD_WIDTH);
         gpaField.setText("" + inputGPA);
@@ -87,10 +143,11 @@ public class GPA_Calculator extends JPanel{
                 inputGPA = gpaField.getText().toUpperCase();
                 classGPA = ClassAndGrade.letterToGPA(inputGPA);
             }
-        }); // end gpaField
-
-
-        // Credit input field
+        }); 
+    } // end createGPAInput method
+    
+    
+    public void createCreditInput() {
         creditLabel = new JLabel("Enter course credit amount: ");
         creditField = new JTextField(FIELD_WIDTH);
         creditField.setText("" + classCredits);
@@ -105,9 +162,11 @@ public class GPA_Calculator extends JPanel{
                 classCredits = Integer.parseInt(creditField.getText());
 
             }
-        }); // end creditFields
-
-        // File Name input field
+        }); 
+    } // end createCreditInput method
+    
+    
+    public void createFileInput() {
         fileLabel = new JLabel("Enter the desired file name: ");
         fileField = new JTextField(FIELD_WIDTH);
         fileField.setText("" + fileName);
@@ -122,11 +181,11 @@ public class GPA_Calculator extends JPanel{
                 fileName = fileField.getText() + ".txt";
 
             }
-        }); // end fileField
+        }); 
+    } // end createFileInput method
 
-
-        // Save Button
-        // Save a course list
+    
+    public void createSave() {
         JButton btnSave = new JButton("Save");
         window.add(btnSave); // add button to the JFrame
         btnSave.setBounds(10, window.getHeight()-75, 100, 30);
@@ -138,7 +197,7 @@ public class GPA_Calculator extends JPanel{
                 {
                     courseList.saveToFile(fileName);
                 } 
-                catch (FileNotFoundException ex)
+                catch (Exception ex)
                 {
                     System.out.println("Error Saving File");
                     ex.printStackTrace();
@@ -147,11 +206,11 @@ public class GPA_Calculator extends JPanel{
 
 
             }
-        }); // end Save
-
-
-        // Load Button
-        // Load in a course list
+        }); 
+    } // end createSave method
+    
+    
+    public void createLoad() {
         JButton btnLoad = new JButton("Load");
         window.add(btnLoad); // add button to the JFrame
         btnLoad.setBounds(110, window.getHeight()-75, 100, 30);
@@ -163,7 +222,7 @@ public class GPA_Calculator extends JPanel{
                 {
                     courseList.pullFromFile(fileName);
                 } 
-                catch (FileNotFoundException ex)
+                catch (Exception ex)
                 {
                     System.out.println("Error Loading File");
                     ex.printStackTrace();
@@ -172,11 +231,11 @@ public class GPA_Calculator extends JPanel{
 
 
             }
-        }); // end Load
-
-
-        // Clear Button
-        // Clear all classes from the list
+        }); 
+    } // end createLoad method
+    
+    
+    public void createClear() {
         JButton btnClear = new JButton("Clear Classes");
         window.add(btnClear); // add button to the JFrame
         btnClear.setBounds(580, window.getHeight()-75, 150, 30);
@@ -188,11 +247,11 @@ public class GPA_Calculator extends JPanel{
 
 
             }
-        }); // end Clear
-
-
-        // Calculate Button
-        // Calculate in a course list
+        }); 
+    } // end createClear method
+    
+    
+    public void createCalculate() {
         JButton btnCalculate = new JButton("Calculate GPA");
         window.add(btnCalculate); // add button to the JFrame
         btnCalculate.setBounds(300, window.getHeight()-75, 150, 30);
@@ -205,11 +264,11 @@ public class GPA_Calculator extends JPanel{
                 calcGPALabel.setText("Calculated GPA: " + calcGPA);
 
             }
-        }); // end Calculate
-
-
-        // Add Button
-        // Add course to course list
+        }); 
+    } // end createCalculate method
+    
+    
+    public void createAdd() {
         JButton btnAdd = new JButton("Add Course");
         window.add(btnAdd); // add button to the JFrame
         btnAdd.setBounds(169, 220 , 150, 30);
@@ -219,43 +278,24 @@ public class GPA_Calculator extends JPanel{
             public void actionPerformed(ActionEvent e) {
                 ClassAndGrade createdClass = new ClassAndGrade(className, classGPA, classCredits);
                 courseList.addcourse(createdClass);
-//                textArea.append("Hello" + "\n");
-
+                System.out.println(createdClass.toString());
+//                textArea.append(createdClass.toString() + "\n");
+                
 
             }
-        }); // end Add
-
-
-
-        // GPA Calculation Display
+        }); 
+    } // end createAdd method
+    
+    
+    public void createCalculationDisplay() {
         calcGPALabel = new JLabel();
         calcGPALabel.setText("Calculated GPA: " + calcGPA);
         window.add(calcGPALabel);
         calcGPALabel.setBounds(300, window.getHeight()-100, 150, 30);
+    } // end createCalculationDisplay method
 
-
-
-
-//        // TODO fix course list table
-//        // Add Course Table
-//        textArea = new JTextArea("Course List", TABLE_ROWS, TABLE_COLUMNS);
-//        textArea.setEditable(false);
-//        window.add(textArea);
-//        textArea.setBounds(370, 50, 500, 400);
-//        scrollPane = new JScrollPane(textArea);
-//        scrollPane.setVerticalScrollBarPolicy(
-//                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-//        scrollPane.setPreferredSize(new Dimension(250, 250));
-
-
-
-    } // end GPA_Calculator Method
-
-
-
-
-
-    public static void main(String[] args) throws FileNotFoundException {
+    
+    public static void main(String[] args) {
         new GPA_Calculator();
 
     } // end main method
