@@ -10,24 +10,24 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class GPAList {
-    public ArrayList<ClassAndGrade> classes;
+    private ArrayList<ClassAndGrade> classes;
 
     public GPAList() {
         classes = new ArrayList <ClassAndGrade>();
     }
 
-    public void addcourse(ClassAndGrade course) {
+    public void addCourse(ClassAndGrade course) {
         classes.add(course);
     }
 
-    public void listCourses() {
+    public String listCourses() {
+        String content = "";
         if(classes.size() == 0)
-            System.out.println("No classes added yet");
-        else
-        {
-            System.out.println("Classes added to calculation list");
-            for(ClassAndGrade course: classes)
-                System.out.println(course);
+            return "No classes added yet";
+        else {
+            for (ClassAndGrade course : classes)
+                content += course + "\n";
+            return content;
         }
     }
 
@@ -47,7 +47,6 @@ public class GPAList {
     }
 
     public void saveToFile(String fileName) throws FileNotFoundException {
-                
         PrintWriter fileOut = new PrintWriter (new File(fileName));
         // method call to save Calculation List to file
 
@@ -67,7 +66,6 @@ public class GPAList {
     }
     
     public void pullFromFile(String fileName) throws FileNotFoundException {
-        
         Scanner fileIn = new Scanner(new File(fileName));
         String className = null;
         double classGPA = -1.0;
@@ -91,11 +89,26 @@ public class GPAList {
         }
         
         fileIn.close();
-       
     }
     
     public void clearList() {
-        classes.clear();
+    	classes.clear();
+    	System.out.println("Courses cleared from list");
+    }
+    
+    public void removeLast() {
+    	String removed = "";
+    	try {
+    		removed = classes.remove(classes.size() - 1).getClassName();
+    		System.out.println(removed + " was removed from the list");
+    	} catch(Exception ex) {
+    		System.out.println("The list is already empty");
+    	}
+    	
+    }
+
+    public int size() {
+        return classes.size();
     }
     
 }
